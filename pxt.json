@@ -7,8 +7,7 @@
         "microphone": "*"
     },
     "files": [
-        "main.blocks",
-        "main.ts",
+        "braingamer.ts",        
         "README.md"
     ],
     "testFiles": [
