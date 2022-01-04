@@ -1,6 +1,6 @@
 {
-    "name": "BrainpaGamer",
-    "description": "",
+    "name": "BrainGamer",
+    "description": "Extension for braingamer accessories",
     "dependencies": {
         "core": "*",
         "radio": "*",
