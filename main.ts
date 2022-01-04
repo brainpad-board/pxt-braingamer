@@ -1,7 +1,9 @@
-input.onButtonPressed(Button.A, function () {
-    braingamer.Vibrate(true)
+braingamer.onEvent(GamerButton.down, function () {
+    braingamer.Beep()
+})
+braingamer.onEvent(GamerButton.up, function () {
+    basic.showString("u")
 })
 basic.forever(function () {
-    basic.pause(500)
-    braingamer.Vibrate(false)
+    basic.showNumber(braingamer.Rocket(GamerRocket.Y))
 })

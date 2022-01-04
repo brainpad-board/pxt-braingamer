@@ -4,15 +4,15 @@ enum GamerRocket {
 }
 
 enum GamerButton  {
-    up = 0,
-    down = 1,
-    left = 2,
-    right = 3
+    up = 1,
+    down = 2,
+    left = 3,
+    right = 4    
 }
 
 
 interface IGamerActionVector {
-    _button: GamerButton;
+    _button: number;
     _action: Action;
 }
 
@@ -70,11 +70,11 @@ namespace braingamer {
     export function Rocket(gamerrocket: GamerRocket): number {
         let value = 0;
         if (gamerrocket == GamerRocket.X) {
-            value = pins.P4.analogRead();
+            value = pins.P4.analogRead();             
             value = Math.map(value, 0, 1024, 1024, -1024);
         }
         else {
-            value = pins.P3.analogRead();
+            value = pins.P3.analogRead();            
             value = Math.map(value, 0, 1024, -1024, 1024);
         }
 
@@ -89,44 +89,75 @@ namespace braingamer {
     //% weight=95 blockGap=8 help=controller/button/on-event
     //% blockId=braingamer_keyonevent block="on button %button pressed"
     export function onEvent(button: GamerButton, handler: () => void) {
-        let item: IGamerActionVector = { _button: button, _action: handler };
+        let bt = 0;
+
+        switch (button) {
+            case GamerButton.up: 
+                bt = 1 
+                pins.setPull(DigitalPin.P14, PinPullMode.PullUp)
+                break
+            case GamerButton.down: 
+                pins.setPull(DigitalPin.P15, PinPullMode.PullUp)
+                bt = 2
+                break
+            case GamerButton.left: 
+                pins.setPull(DigitalPin.P13, PinPullMode.PullUp)
+                bt = 3
+                break
+            case GamerButton.right: 
+                pins.setPull(DigitalPin.P16, PinPullMode.PullUp)
+                bt = 4
+                break
+        }
+        let item: IGamerActionVector = { _button: bt, _action: handler };
 
         gamerButtonActionCallback.push(item);
     }
 
     let buttonValue: number
-    let buttonScanIdx: number = 1;
-
+    let buttonScanIdx: number = 0;
 
     function GamerGetButtonState() : number {
         switch (buttonScanIdx) {
-            case 0: buttonValue = pins.digitalReadPin(DigitalPin.P14) == 0 ? 1 : 0
-            case 1: buttonValue = pins.digitalReadPin(DigitalPin.P15) == 0 ? 1 : 0
-            case 2: buttonValue = pins.digitalReadPin(DigitalPin.P13) == 0 ? 1 : 0
-            case 3: buttonValue = pins.digitalReadPin(DigitalPin.P16) == 0 ? 1 : 0
+            case 1:                 
+                buttonValue = pins.digitalReadPin(DigitalPin.P14) == 0 ? 1 : 0
+                break
+            
+            case 2:                 
+                buttonValue = pins.digitalReadPin(DigitalPin.P15) == 0 ? 2 : 0
+                break
+            
+            case 3:                 
+                buttonValue = pins.digitalReadPin(DigitalPin.P13) == 0 ? 3 : 0
+                break
+            
+            case 4:                 
+                buttonValue = pins.digitalReadPin(DigitalPin.P16) == 0 ? 4 : 0
+                break
                 
         }
+
         buttonScanIdx++;
-        if (buttonScanIdx == 4)
-            buttonScanIdx = 0
+        if (buttonScanIdx == 5)
+            buttonScanIdx = 1
 
         return buttonValue;
     }
 
-    forever(() => {
+
+    forever(function () {
         if (gamerButtonActionCallback != null) {
             let sta = GamerGetButtonState();
-            if (sta == 0) {
+            if (sta != 0) {
                 for (let item of gamerButtonActionCallback) {
                     if (item._button == sta) {
                         item._action();
                     }
+
                 }
             }
         }
-        pause(40);
+        pause(25);
     })
-	
-	
-
 }
+
