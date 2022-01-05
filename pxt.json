@@ -1,6 +1,6 @@
 {
     "name": "BrainGamer",
-	"version": "0.0.1",
+	"version": "1.0.0",
     "description": "Extension for braingamer accessories",
 	"icon": "/braingamer.png",	
 	"license": "MIT",
