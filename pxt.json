@@ -9,9 +9,7 @@
         "radio": "*",
         "microphone": "*"
     },
-    "files": [
-        "main.blocks",
-        "main.ts",
+    "files": [       
         "braingamer.ts",
         "README.md"
     ],
